@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:store/componetns/drawer_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({Key? key}) : super(key: key);
+  const CustomDrawer({Key? key, required this.pageController})
+      : super(key: key);
+
+  final PageController pageController;
+
   Widget _buildDrawerBack() => Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -25,19 +30,69 @@ class CustomDrawer extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 16, 16, 8),
               height: 170,
               child: Stack(
-                children: const [
+                children: [
                   Positioned(
+                    top: 8,
+                    left: 0,
                     child: Text(
                       "Flutter´s\nClothing",
                       style:
                           TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
                     ),
-                    top: 8,
+                  ),
+                  Positioned(
+                    bottom: 0,
                     left: 0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Ola,",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            "Entre ou cadastre-se >",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
-            )
+            ),
+            Divider(),
+            DrawerTile(
+              title: "Inicio",
+              icon: Icons.home,
+              pageController: pageController,
+              page: 0,
+            ),
+            DrawerTile(
+              title: "Produtos",
+              icon: Icons.list,
+              pageController: pageController,
+              page: 1,
+            ),
+            DrawerTile(
+              title: "Lojas",
+              icon: Icons.location_on,
+              pageController: pageController,
+              page: 2,
+            ),
+            DrawerTile(
+              title: "Meus Pedidos",
+              icon: Icons.playlist_add_check,
+              pageController: pageController,
+              page: 3,
+            ),
           ],
         )
       ],
