@@ -14,6 +14,6 @@ class Product {
         title = document.data()!['title'],
         description = document.data()!['description'],
         price = document.data()!['price'],
-        sizes = document.data()!['sizes'],
-        images = document.data()!['images'];
+        sizes = document.data()!['sizes'].cast<String>(),
+        images = document.data()!['images'].cast<String>();
 }
