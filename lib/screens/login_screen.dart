@@ -2,11 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:store/models/user_model.dart';
 import 'package:store/screens/create_account_screen.dart';
+import 'package:store/screens/home.dart';
 
-class LoginScreem extends StatelessWidget {
-  LoginScreem({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  void _onSuccess() async {
+    Navigator.of(context).pop();
+  }
+
+  void _onFail() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Erro ao realizar cadastro"),
+      backgroundColor: Colors.red,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +40,8 @@ class LoginScreem extends StatelessWidget {
               enableFeedback: true,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => CreateAccountScreem()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CreateAccountScreen()));
             },
             child: Text(
               "Criar Conta",
@@ -33,17 +51,13 @@ class LoginScreem extends StatelessWidget {
         ],
       ),
       body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
-        if (model.isLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
         return Form(
           key: _formKey,
           child: ListView(
             padding: EdgeInsets.all(16),
             children: [
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(hintText: "Email"),
                 validator: (email) {
                   if (email!.isEmpty || !email.contains("@")) {
@@ -54,6 +68,7 @@ class LoginScreem extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 16),
                 child: TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(hintText: "Senha"),
                   keyboardType: TextInputType.emailAddress,
@@ -87,14 +102,20 @@ class LoginScreem extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  model.signIn();
-                  if (_formKey.currentState?.validate() != null &&
-                      _formKey.currentState!.validate()) {}
+                  if (_formKey.currentState!.validate()) {
+                    model.signIn(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        onSuccess: _onSuccess,
+                        onFail: _onFail);
+                  }
                 },
-                child: Text(
-                  "Entrar",
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: !model.isLoading
+                    ? Text(
+                        "Entrar",
+                        style: TextStyle(fontSize: 18),
+                      )
+                    : CircularProgressIndicator(),
               )
             ],
           ),

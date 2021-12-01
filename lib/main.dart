@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:store/models/user_model.dart';
 import 'package:store/screens/home.dart';
-import 'package:store/screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
