@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:store/componetns/cart_button.dart';
 import 'package:store/componetns/product_tile.dart';
 import 'package:store/datas/product.dart';
 
@@ -50,20 +51,20 @@ class CategoryScreem extends StatelessWidget {
                     ),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      return ProductTile(
-                          type: "grid",
-                          product:
-                              Product.fromDocument(snapshot.data!.docs[index]));
+                      var product =
+                          Product.fromDocument(snapshot.data!.docs[index]);
+                      product.category = this.snapshot.id;
+                      return ProductTile(type: "grid", product: product);
                     },
                   ),
                   ListView.builder(
                     padding: EdgeInsets.all(4),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      return ProductTile(
-                          type: "list",
-                          product:
-                              Product.fromDocument(snapshot.data!.docs[index]));
+                      var product =
+                          Product.fromDocument(snapshot.data!.docs[index]);
+                      product.category = this.snapshot.id;
+                      return ProductTile(type: "list", product: product);
                     },
                   )
                 ],
@@ -71,6 +72,7 @@ class CategoryScreem extends StatelessWidget {
             }
           },
         ),
+        floatingActionButton: CartButton(),
       ),
     );
   }

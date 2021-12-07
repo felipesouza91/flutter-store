@@ -1,6 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:store/componetns/cart_button.dart';
+import 'package:store/datas/cart_product.dart';
 import 'package:store/datas/product.dart';
+import 'package:store/models/cart_model.dart';
+import 'package:store/models/user_model.dart';
+import 'package:store/screens/login_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key, required this.product}) : super(key: key);
@@ -153,18 +158,31 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          _size != null ? primariColor : Colors.grey),
+                          _size != null || !UserModel.of(context).isLoggedIn()
+                              ? primariColor
+                              : Colors.grey),
                       fixedSize: MaterialStateProperty.all(
                         Size.fromHeight(50),
                       ),
                     ),
-                    onPressed: _size != null
-                        ? () {
-                            print("Test");
-                          }
-                        : null,
+                    onPressed: () {
+                      if (UserModel.of(context).isLoggedIn()) {
+                        if (_size != null) {
+                          var cartProduct = CartProduct(product.category!,
+                              product, product.id, 1, _size!);
+                          CartModel.of(context).addCartItem(cartProduct);
+                        } else {
+                          null;
+                        }
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LoginScreen()));
+                      }
+                    },
                     child: Text(
-                      "Adicionar ao Carrinho ${_size != null}",
+                      UserModel.of(context).isLoggedIn()
+                          ? "Adicionar ao Carrinho"
+                          : "Entrar para comprar",
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,

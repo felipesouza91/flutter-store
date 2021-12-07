@@ -16,4 +16,12 @@ class Product {
         price = document.data()!['price'],
         sizes = document.data()!['sizes'].cast<String>(),
         images = document.data()!['images'].cast<String>();
+
+  Map<String, dynamic> toResumeMap() {
+    return {
+      "title": title,
+      "description": description,
+      "price": price,
+    };
+  }
 }

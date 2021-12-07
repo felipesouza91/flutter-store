@@ -18,6 +18,9 @@ class UserModel extends Model {
     _loadCurrentUser();
   }
 
+  static UserModel of(BuildContext context) =>
+      ScopedModel.of<UserModel>(context);
+
   void signUp(
       {required Map<String, dynamic> userData,
       required String pass,
@@ -64,17 +67,22 @@ class UserModel extends Model {
 
   Future<void> _loadCurrentUser() async {
     firebaseUser = _auth.currentUser;
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(firebaseUser!.uid)
-        .get()
-        .then((value) {
-      userData = value.data()!;
-      notifyListeners();
-    });
+    if (firebaseUser != null) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(firebaseUser!.uid)
+          .get()
+          .then((value) {
+        userData = value.data()!;
+        notifyListeners();
+      });
+    }
   }
 
-  void recoverPass() {}
+  void recoverPass(String email) {
+    _auth.sendPasswordResetEmail(email: email);
+  }
+
   bool isLoggedIn() {
     return firebaseUser != null;
   }
