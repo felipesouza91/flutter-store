@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:store/componetns/cart_product_tile.dart';
+import 'package:store/componetns/discount_cart.dart';
 import 'package:store/models/cart_model.dart';
 import 'package:store/screens/login_screen.dart';
 
@@ -86,7 +87,8 @@ class CartScreen extends StatelessWidget {
                             cartProduct: item,
                           ))
                       .toList(),
-                )
+                ),
+                DiscountCart(),
               ],
             );
           }

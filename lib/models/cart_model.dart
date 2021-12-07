@@ -7,6 +7,8 @@ import 'package:store/models/user_model.dart';
 class CartModel extends Model {
   UserModel user;
   List<CartProduct> products = [];
+  String? couponCode;
+  int discountPercenage = 0;
   bool isLoading = false;
   CartModel(this.user) {
     if (user.isLoggedIn()) {
@@ -49,6 +51,12 @@ class CartModel extends Model {
         .doc(product.id)
         .delete();
     products.remove(product);
+    notifyListeners();
+  }
+
+  void setCouponCode(String text, int discountPercenage) {
+    couponCode = text;
+    this.discountPercenage = discountPercenage;
     notifyListeners();
   }
 
