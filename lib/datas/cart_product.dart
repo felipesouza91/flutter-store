@@ -18,7 +18,6 @@ class CartProduct {
         productId = document.data()!['productId'],
         quantity = document.data()!["quantity"],
         size = document.data()!["size"];
-  //productData = document.data()!["productData"];
 
   Map<String, dynamic> toMap() {
     return {

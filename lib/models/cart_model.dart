@@ -72,7 +72,6 @@ class CartModel extends Model {
   }
 
   void incProduct(CartProduct cartProduct) {
-    print(cartProduct.id);
     cartProduct.quantity++;
     FirebaseFirestore.instance
         .collection("users")
@@ -81,5 +80,27 @@ class CartModel extends Model {
         .doc(cartProduct.id)
         .update(cartProduct.toMap());
     notifyListeners();
+  }
+
+  void updatePrice() {
+    notifyListeners();
+  }
+
+  double getProductsPrice() {
+    return products.fold<double>(0.0, (previousValue, element) {
+      if (element.productData != null) {
+        return previousValue + (element.productData!.price * element.quantity);
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  double getShipPrice() {
+    return 9.99;
+  }
+
+  double getDiscount() {
+    return getProductsPrice() * discountPercenage / 100;
   }
 }
