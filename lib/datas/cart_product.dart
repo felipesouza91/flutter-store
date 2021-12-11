@@ -12,12 +12,13 @@ class CartProduct {
   CartProduct(this.category, this.productData, this.productId, this.quantity,
       this.size);
 
-  CartProduct.fromDocument(DocumentSnapshot<Map<String, dynamic>> document)
+  CartProduct.fromDocument(QueryDocumentSnapshot<Map<String, dynamic>> document)
       : id = document.id,
-        category = document.data()!['category'],
-        productId = document.data()!['productId'],
-        quantity = document.data()!["quantity"],
-        size = document.data()!["size"];
+        category = document.data()['category'],
+        productId = document.data()['productId'],
+        //productData = Product.fromDocument(document.data()['productData']),
+        quantity = document.data()["quantity"],
+        size = document.data()["size"];
 
   Map<String, dynamic> toMap() {
     return {
@@ -25,7 +26,7 @@ class CartProduct {
       "productId": productId,
       "quantity": quantity,
       "size": size,
-      //"productData": productData.toResumeMap()
+      "productData": productData!.toResumeMap()
     };
   }
 }

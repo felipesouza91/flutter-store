@@ -3,9 +3,10 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:store/componetns/cart_product_tile.dart';
 import 'package:store/componetns/cart_resume.dart';
 import 'package:store/componetns/discount_cart.dart';
+import 'package:store/componetns/required_login.dart';
 import 'package:store/componetns/ship_card.dart';
 import 'package:store/models/cart_model.dart';
-import 'package:store/screens/login_screen.dart';
+import 'package:store/screens/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Meu carrinho"),
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         actions: [
           Container(
@@ -34,43 +36,9 @@ class CartScreen extends StatelessWidget {
           if (model.isLoading && model.user.isLoggedIn()) {
             return Center(child: CircularProgressIndicator());
           } else if (!model.user.isLoggedIn()) {
-            return Container(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.remove_shopping_cart,
-                    size: 80,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Text(
-                      "Faça o login para adicionar produtos",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ));
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).primaryColor),
-                    ),
-                    child: Text(
-                      "Entrar",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
+            return RequiredLogin(
+              description: "Faça o login para adicionar produtos",
+              icon: Icons.remove_shopping_cart,
             );
           } else if (model.products == null || model.products.isEmpty) {
             return Center(
@@ -93,7 +61,18 @@ class CartScreen extends StatelessWidget {
                 DiscountCart(),
                 ShippingCard(),
                 CartResume(
-                  buy: () {},
+                  buy: () async {
+                    print("Arqui");
+                    String? orderId = await model.finishOrder();
+                    print(orderId);
+                    if (orderId != null) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => OrderScreen(orderId: orderId),
+                        ),
+                      );
+                    }
+                  },
                 )
               ],
             );
